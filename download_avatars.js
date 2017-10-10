@@ -2,6 +2,7 @@ var request = require('request');
 var fs = require("fs");
 var GITHUB_USER = "Travis-ko";
 var GITHUB_TOKEN = "44d66c6708dd505da78db45e06a67d3926ca03e8";
+var filePath = "avatars/";
 console.log('Welcome to the GitHub Avatar Downloader!');
 
 function getRepoContributors(repoOwner, repoName, cb) {
@@ -15,16 +16,10 @@ function getRepoContributors(repoOwner, repoName, cb) {
     request.get(requestOptions, cb);
 }
 function downloadImageByURL(url, filePath) {
-request.get(url)
-.pipe(fs.createWriteStream(filePath));
+    request.get(url)
+        .pipe(fs.createWriteStream(filePath));
 }
-downloadImageByURL("https://avatars2.githubusercontent.com/u/2741?v=3&s=466", "avatars/kvirani.jpg");
-// getRepoContributors("jquery", "jquery", function(err, result) {
-// console.log("Errors:", err);
-// var resultObj = JSON.parse(result.body);
-// resultObj.forEach((item) => console.log(item.avatar_url))
-// });
-// getRepoContributors("jquery", "jquery", function(err, result) {
-//   console.log("Errors:", err);
-//   console.log("Result:", result);
-// });
+getRepoContributors("jquery", "jquery", function(err, result) {
+    var bodyObject = JSON.parse(result.body);
+    bodyObject.forEach((item) => downloadImageByURL(item.avatar_url, filePath + item.login + ".jpg"));
+});
